@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 23:31:59 by slahrach          #+#    #+#             */
-/*   Updated: 2023/01/30 09:32:41 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/02/01 00:32:43 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,53 +15,45 @@
  #include "iterator_t.hpp"
  namespace ft
  {
-	template <typename T>
+	template <typename Iter>
 	class RaIterator
 	{
 		public :
-		typedef typename T::value_type		value_type;
-		typedef typename T::defference_type	difference_type;
+		typedef typename iterator_traits<Iter>::value_type		value_type;
+		typedef typename iterator_traits<Iter>::defference_type	difference_type;
 		typedef value_type*					pointer;
 		typedef value_type&					reference;
-		RaIterator(pointer ptr_) : ptr(ptr_)
-		{};
+		RaIterator() : iter(){};
+		RaIterator(Iter iter_) : iter(iter_){};
 		template <typename it>
-		RaIterator&(RaIterator<it>& copy)
-		{
-			*this = copy;
-			return (*this);
-		};
+		RaIterator&(RaIterator<it>& copy) : iter(copy.get_iter()){};
 		~RaIterator() {};
 		template <typename it>
 		RaIterator& operator=(RaIterator<it>& obj)
 		{
-			this->ptr = obj.get_ptr();
+			this->iter = obj.get_iter();
 			return (*this);
 		};
-		pointer get_ptr(void) const
+		pointer get_iter(void) const
 		{
-			return (ptr);
+			return (iter);
 		}
 		//operations overloading
 		reference operator *(void) const
 		{
-			return (*ptr);
-		}
-		const value_type& operator *(void) const
-		{
-			return (*ptr);
+			return (*iter);
 		}
 		reference operator[](difference_type n) const
 		{
-			return (ptr[n]);
+			return (iter[n]);
 		}
 		pointer operator ->(void) const
 		{
-			return (ptr);
+			return (iter);
 		}
 		RaIterator& operator++(void)
 		{
-			ptr++;
+			iter++;
 			return (*this);
 		}
 		RaIterator operator++(int)
@@ -72,7 +64,7 @@
 		}
 		RaIterator& operator--(void)
 		{
-			ptr--;
+			iter--;
 			return (*this);
 		}
 		RaIterator operator--(int)
@@ -84,29 +76,29 @@
 		RaIterator operator +(difference_type n)
 		{
 			RaIterator it = *this;
-			it.get_ptr()+= n;
+			it.get_iter()+= n;
 			return (it);
 		}
 		RaIterator operator -(difference_type n)
 		{
 			RaIterator it = *this;
-			it.get_ptr()-= n;
+			it.get_iter()-= n;
 			return (it);
 		}
 		RaIterator& operator+=(difference_type n)
 		{
-			ptr+=n;
+			iter+=n;
 			return (*this);
 		}
 		RaIterator& operator-=(difference_type n)
 		{
-			ptr-=n;
+			iter-=n;
 			return (*this);
 		}
 		template <class T>
 		friend RaIterator operator==(RaIterator<T>& __x, RaIterator<T>& __y)
 		{
-			return __x.ptr == __y.ptr;
+			return __x.iter == __y.iter;
 		}
 		template <class T>
 		friend RaIterator<T> operator +(difference_type n, RaIterator<T> __x)
@@ -118,12 +110,12 @@
 		template <class T>
 		friend bool operator==(RaIterator<T>& __x, RaIterator<T>& __y)
 		{
-			return __x.ptr == __y.ptr;
+			return __x.iter == __y.iter;
 		}
 		template <class T>
 		friend bool operator<(RaIterator<T>& __x, RaIterator<T>& __y)
 		{
-			return (__x.ptr < __y.ptr);
+			return (__x.iter < __y.iter);
 		}
 		template <class T>
 		friend bool operator>(RaIterator<T>& __x, RaIterator<T>& __y)
@@ -148,10 +140,10 @@
 		template <class T>
 		friend difference_type operator-(RaIterator<T>& __x, RaIterator<T>& __y)
 		{
-			return (__x.ptr - __y.ptr);
+			return (__x.iter - __y.iter);
 		}
 		private :
-		value_type	*ptr;
+		Iter	iter;
 		
 	}
  }
