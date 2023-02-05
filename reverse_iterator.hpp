@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 10:04:57 by slahrach          #+#    #+#             */
-/*   Updated: 2023/02/01 00:07:52 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/02/04 11:49:00 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,55 +94,55 @@
 		}
 		// non member functions
 		template <class T>
-		reverse_iterator<T> operator +(difference_type n, reverse_iterator<T> __x)
+		friend reverse_iterator<T> operator +(difference_type n, reverse_iterator<T> __x)
 		{
 			__x += n;
 			return (__x);
 		}
 		// comparaison
 		template <class T>
-		bool operator==(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend bool operator==(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
 			return __x.getCurrent() == __y.getCurrent();
 		}
 		template <class T>
-		bool operator<(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend bool operator<(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
 			return (__x.getCurrent > __y.getCurrent);
 		}
 		template <class T>
-		bool operator>(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend bool operator>(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
 			return (__x.getCurrent < __y.getCurrent);
 		}
 		template <class T>
-		bool operator!=(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend bool operator!=(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
-			return !(__x == __y)
+			return !(__x == __y);
 		}
 		template <class T>
-		bool operator>=(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend bool operator>=(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
 			return (__x.getCurrent() <= __y.getCurrent());
 		}
 		template <class T>
-		bool operator<=(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend bool operator<=(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
 			return (__x.getCurrent() >= __y.getCurrent());
 		}
 		template <class T>
-		difference_type operator-(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
+		friend difference_type operator-(reverse_iterator<T>& __x, reverse_iterator<T>& __y)
 		{
 			return (__y.getCurrent() - __x.getCurrent());
 		}
 		template <class iter>
-		reverse_iterator<iter> make_reverse_iterator(Iter i)
+		friend reverse_iterator<iter> make_reverse_iterator(Iter i)
 		{
 			return (reverse_iterator<iter>(i));
 		}
 		private :
 		Iter	current;
 		
-	}
+	};
  }
 #endif 

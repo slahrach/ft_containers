@@ -6,7 +6,7 @@
 /*   By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 23:31:59 by slahrach          #+#    #+#             */
-/*   Updated: 2023/02/01 00:32:43 by slahrach         ###   ########.fr       */
+/*   Updated: 2023/02/05 17:58:00 by slahrach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@
 	{
 		public :
 		typedef typename iterator_traits<Iter>::value_type		value_type;
-		typedef typename iterator_traits<Iter>::defference_type	difference_type;
-		typedef value_type*					pointer;
-		typedef value_type&					reference;
+		typedef typename iterator_traits<Iter>::difference_type			difference_type;
+		typedef value_type*								pointer;
+		typedef value_type&								reference;
 		RaIterator() : iter(){};
 		RaIterator(Iter iter_) : iter(iter_){};
 		template <typename it>
-		RaIterator&(RaIterator<it>& copy) : iter(copy.get_iter()){};
+		RaIterator(RaIterator<it>& copy) : iter(copy.get_iter()){};
 		~RaIterator() {};
 		template <typename it>
 		RaIterator& operator=(RaIterator<it>& obj)
@@ -73,18 +73,6 @@
 			--(*this);
 			return (iter);
 		}
-		RaIterator operator +(difference_type n)
-		{
-			RaIterator it = *this;
-			it.get_iter()+= n;
-			return (it);
-		}
-		RaIterator operator -(difference_type n)
-		{
-			RaIterator it = *this;
-			it.get_iter()-= n;
-			return (it);
-		}
 		RaIterator& operator+=(difference_type n)
 		{
 			iter+=n;
@@ -95,10 +83,17 @@
 			iter-=n;
 			return (*this);
 		}
-		template <class T>
-		friend RaIterator operator==(RaIterator<T>& __x, RaIterator<T>& __y)
+		RaIterator operator +(difference_type n)
 		{
-			return __x.iter == __y.iter;
+			RaIterator it = *this;
+			it+= n;
+			return (it);
+		}
+		RaIterator operator -(difference_type n)
+		{
+			RaIterator it = *this;
+			it-= n;
+			return (it);
 		}
 		template <class T>
 		friend RaIterator<T> operator +(difference_type n, RaIterator<T> __x)
@@ -108,43 +103,48 @@
 		}
 		// comparaison
 		template <class T>
-		friend bool operator==(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend bool operator==(RaIterator<T> __x, RaIterator<T> __y)
 		{
 			return __x.iter == __y.iter;
 		}
 		template <class T>
-		friend bool operator<(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend bool operator<(RaIterator<T> __x, RaIterator<T> __y)
 		{
 			return (__x.iter < __y.iter);
 		}
 		template <class T>
-		friend bool operator>(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend bool operator>(RaIterator<T> __x, RaIterator<T> __y)
 		{
 			return (__y < __x);
 		}
 		template <class T>
-		friend bool operator!=(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend bool operator!=(RaIterator<T> __x, RaIterator<T> __y)
 		{
-			return !(__x == __y)
+			return !(__x == __y);
 		}
 		template <class T>
-		friend bool operator>=(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend bool operator>=(RaIterator<T> __x, RaIterator<T> __y)
 		{
 			return !(__x < __y);
 		}
 		template <class T>
-		friend bool operator<=(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend bool operator<=(RaIterator<T> __x, RaIterator<T> __y)
 		{
 			return !(__y < __x);
 		}
 		template <class T>
-		friend difference_type operator-(RaIterator<T>& __x, RaIterator<T>& __y)
+		friend difference_type operator-(RaIterator<T> __x, RaIterator<T> __y)
+		{
+			return (__x.iter - __y.iter);
+		}
+		template <class T, class U>
+		friend difference_type operator-(RaIterator<T> __x, RaIterator<U> __y)
 		{
 			return (__x.iter - __y.iter);
 		}
 		private :
 		Iter	iter;
 		
-	}
+	};
  }
 #endif 
