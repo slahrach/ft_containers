@@ -19,7 +19,7 @@
  #include <iostream>
  #include "iterator_r_a.hpp"
  #include "reverse_iterator.hpp"
- #include <vector>
+ #include <algorithm>
  namespace ft
  {
 	template <class T, class _Allocator = std::allocator<T> >
@@ -134,11 +134,11 @@
 				}
 			}
 		}
-		vector& operator = (const vector& x)
+		vector& operator = (vector& x)
 		{
 			if (this != &x)
 			{
-				assign(x._begin, x._end);
+				assign(x.begin(), x.end());
 			}
 			return (*this);
 		}
@@ -150,13 +150,9 @@
 
 		//iterators
 		iterator begin() {return (iterator(this->_begin));}
-		const_iterator cbegin() {return (iterator(this->_begin));}
 		iterator end() {return (iterator(this->_end));}
-		const_iterator cend() {return (iterator(this->_end));}
 		reverse_iterator rbegin() {return (reverse_iterator(begin()));}
-		const_reverse_iterator crbegin() {return (const_reverse_iterator(begin()));}
 		reverse_iterator rend() {return (reverse_iterator(end()));}
-		const_reverse_iterator crend() {return (const_reverse_iterator(end()));}
 
 		//access
 		reference operator[](size_type n)
@@ -266,35 +262,124 @@
 		{
 			if (size() + 1 > alloc.max_size())
 				throw std::length_error("vector");
-			if (size() < capacity())
-				construct_at__end(1, val);
-			else
-			{
+			if (size() == capacity())
 				capacity() != 0 ? reserve(capacity() * 2) : reserve(1);
-				construct_at__end(1, val);
-			}
+			construct_at__end(1, val);
 		}
 		void	pop_back()
 		{
 			destroy_from(_end - 1);
 		}
+		void	move_elem(difference_type p_origin, difference_type p_dest)
+		{
+			vector v(*this);
+			while (begin() + p_dest != end() &&  v.begin() + p_origin != v.end())
+			{
+				*(begin() + p_dest) = *(v.begin() + p_origin);
+				p_origin++;
+				p_dest++;
+			}
+		}
 		iterator erase (iterator position)
 		{
-			difference_type pos1 = position - begin();
 			difference_type pos = position - begin();
+			move_elem(pos + 1, pos);
+			pop_back();
+			return(begin() + pos);
+		}
+		iterator erase (iterator first, iterator last)
+		{
+			difference_type first_pos = first - begin();
+			move_elem(last - begin(), first - begin());
+			for (difference_type nbr = last - first; nbr > 0; nbr--)
+				pop_back();
+			return(begin() + first_pos);
+		}
+		iterator insert (iterator position, const value_type& val)
+		{
 			vector v(*this);
-			iterator b = v.begin() + pos + 1;
-			iterator e = v.end();
-			while (b != e)
+			difference_type pos1 = position - begin();
+			pointer	p1 = this->_begin + (pos1);
+			if (p1 == this->_end)
+				push_back(val);
+			else
 			{
-				*(_begin + pos) = *b;
-				b++;
-				pos++;
+				*p1 = val;
+				for (iterator b = v.begin() + pos1; b < (v.end() - 1); b++)
+				{
+					p1++;
+					*p1 = *b;
+				}
+				push_back(v.back());
 			}
-			//pop_back();
-			return(begin() + pos1);
+			p1 = this->_begin + (pos1);
+			return (iterator(p1));
+		}
+		void	insert (iterator position, size_type n, const value_type& val)
+		{
+			difference_type d = position - begin();
+			for (size_type i = 0; i < n; i++)
+			{
+				if (size() >= 16)
+					reserve(size() + 1);
+				iterator t = begin() + d;
+				insert(t, val);
+
+			}
+		}
+		void insert (iterator position, iterator first, iterator last)
+		{
+			difference_type d = position - begin();
+			for (;first < last; first++)
+			{
+				iterator t = begin() + d;
+				insert(t, *first);
+				d++;
+			}
+		}
+		void	swap(vector& x)
+		{
+			std::swap(_begin, x._begin);
+			std::swap(_end, x._end);
+			std::swap(_end_cap, x._end_cap);
+			std::swap(alloc, x.alloc);
 		}
 	};
+	template< class T, class Alloc >
+	void swap(vector<T,Alloc>& lhs, vector<T,Alloc>& rhs )
+	{
+		lhs.swap(rhs);
+	}
+	template <class T, class Alloc>  
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return (lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+	template <class T, class Alloc>  
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+	template <class T, class Alloc>  
+	bool operator < (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return std::lexicographical_compare(lhs.begin(), lhs.end(), lhs.begin(), rhs.end());
+	}
+	template <class T, class Alloc>  
+	bool operator > (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return rhs < lhs;
+	}
+	template <class T, class Alloc>  
+	bool operator >= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return  !(lhs < rhs);
+	}
+	template <class T, class Alloc>  
+	bool operator <= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		return  !(rhs < lhs);
+	}
  }
 
 #endif 

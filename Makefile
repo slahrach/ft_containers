@@ -6,7 +6,7 @@
 #    By: slahrach <slahrach@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/28 04:00:20 by slahrach          #+#    #+#              #
-#    Updated: 2023/01/28 04:00:38 by slahrach         ###   ########.fr        #
+#    Updated: 2023/02/05 19:38:30 by slahrach         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ OBJS = ${SRCS:.cpp=.o}
 all : ${NAME}
 
 ${NAME} : ${OBJS}
-	${CC} ${CFLAGS} ${STDFLAGS} ${OBJS} -o ${NAME}
+	${CC} ${CFLAGS}  ${OBJS} -o ${NAME}
 
 clean :
 	rm -rf ${OBJS}
@@ -36,6 +36,6 @@ fclean : clean
 re : fclean all
 
 %.o : %.cpp
-	${CC} ${CFLAGS} ${STDFLAGS} -c $<
+	${CC} ${CFLAGS}  -c $<
 
 .PHONY: clean all fclean re

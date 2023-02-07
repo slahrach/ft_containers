@@ -50,6 +50,17 @@
         "ostream": "cpp",
         "streambuf": "cpp",
         "system_error": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "__hash_table": "cpp",
+        "__node_handle": "cpp",
+        "array": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp",
+        "optional": "cpp",
+        "sstream": "cpp",
+        "unordered_map": "cpp",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "stack": "cpp"
     }
 }
